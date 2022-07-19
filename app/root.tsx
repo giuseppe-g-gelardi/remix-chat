@@ -1,7 +1,7 @@
-import type { 
-  MetaFunction, 
-  LoaderFunction, 
-  LinksFunction 
+import type {
+  MetaFunction,
+  LoaderFunction,
+  LinksFunction
 } from "@remix-run/node";
 
 import {
@@ -11,9 +11,12 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData
+  useLoaderData,
+  useFetcher
 } from "@remix-run/react";
+import { useEffect } from "react";
 
+import supabase from "./api/supabase";
 import styles from './tailwind.css'
 
 export const links: LinksFunction = () => {
@@ -33,11 +36,31 @@ export const loader: LoaderFunction = async () => {
       SUPABASE_KEY: process.env.SUPABASE_KEY
     }
   }
-
 }
 
 export default function App() {
   const { env } = useLoaderData()
+  const fetcher = useFetcher()
+
+  console.log(fetcher.state)
+
+
+  useEffect(() => {
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') {
+        // call /auth/login
+        fetcher.submit({
+          accessToken: session?.access_token!
+        }, {
+          method: 'post',
+          action: '/auth/login'
+        })
+      }
+    })
+
+
+  }, [])
 
   return (
     <html lang="en">

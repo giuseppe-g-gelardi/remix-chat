@@ -3,6 +3,7 @@ import { useLoaderData, Link, Outlet } from "@remix-run/react"
 import supabase from '../api/supabase'
 
 import type { LoaderFunction } from "@remix-run/node"
+import { useEffect } from "react"
 
 export const loader: LoaderFunction = async () => {
   const { data: channels, error } = await supabase.from('channels').select('id, title')
@@ -14,7 +15,6 @@ export const loader: LoaderFunction = async () => {
 export default function Channels() {
   const { channels } = useLoaderData()
 
-  console.log(supabase.auth.user())
   return (
     <div className="h-screen flex">
       <div className="bg-gray-800 w-40 p-8 text-white">

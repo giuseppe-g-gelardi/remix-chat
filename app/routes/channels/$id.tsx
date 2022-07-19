@@ -1,7 +1,4 @@
-
-
 import { useLoaderData, Form, useFetcher } from "@remix-run/react"
-
 import { useEffect, useState } from "react"
 
 import supabase from '../../api/supabase'
@@ -26,11 +23,12 @@ export const action: ActionFunction = async ({ request }) => {
   const content = form.get('content')
   const channelId = form.get('channelId')
 
-  const { data, error } = await supabase
+  // const { data, error } = await supabase
+  const { error } = await supabase
     .from('messages').insert({ content, channel_id: channelId })
   if (error) console.error(error.message)
 
-  console.log(data)
+  // console.log(data)
 
   return null;
 }
@@ -62,13 +60,21 @@ export default function ChannelId() {
   }, [channel])
 
   return (
-    <div>
-      <pre>{JSON.stringify(messages, null, 2)}</pre>
-      <Form method='post'>
-        <input name='content' />
+    <>
+    <h1 className="text-2xl uppercase mb-2">{channel.title}</h1>
+    <p className="text-gray-600 border-b border-gray-300 pb-6">{channel.description}</p>
+      <div className="flex-1 flex flex-col p-2 overflow-auto">
+        <div className="mt-auto">
+          {messages.map((message: any) => (
+            <p key={message.id} className="p-2">{message.content}</p>
+          ))}
+        </div>
+      </div>
+      <Form method='post' className="flex">
+        <input name='content' className="border border-gray-200 px-2 flex-1" />
         <input type='hidden' name='channelId' value={channel.id} />
-        <button type="submit">send!</button>
+        <button type="submit" className="px-4 py-2 ml-4 bg-blue-200">send!</button>
       </Form>
-    </div>
+    </>
   )
 }

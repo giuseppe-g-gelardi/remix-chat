@@ -5,8 +5,13 @@ import supabase from '../../api/supabase'
 
 import type { LoaderFunction, ActionFunction } from "@remix-run/node"
 
+import withAuthRequired from "~/api/withAuthRequired"
 
-export const loader: LoaderFunction = async ({ params: { id } }) => {
+export const loader: LoaderFunction = async ({ params: { id }, request }) => {
+
+  const { supabase, redirect } = await withAuthRequired({ request })
+  if (redirect) return redirect
+
   const { data: channel, error } = await supabase
     .from('channels')
     .select('id, title, description, messages(id, content)')
@@ -15,10 +20,14 @@ export const loader: LoaderFunction = async ({ params: { id } }) => {
 
   if (error) console.error(error)
 
+
   return { channel }
 }
 
 export const action: ActionFunction = async ({ request }) => {
+  const { supabase, redirect } = await withAuthRequired({ request })
+  if (redirect) return redirect
+
   const form = await request.formData()
   const content = form.get('content')
   const channelId = form.get('channelId')
@@ -27,7 +36,6 @@ export const action: ActionFunction = async ({ request }) => {
   const { error } = await supabase
     .from('messages').insert({ content, channel_id: channelId })
   if (error) console.error(error.message)
-
   // console.log(data)
 
   return null;

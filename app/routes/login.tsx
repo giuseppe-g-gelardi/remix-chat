@@ -2,6 +2,26 @@ import { Link } from "@remix-run/react"
 import supabase from '../api/supabase'
 import type { SyntheticEvent } from "react"
 
+import { redirect } from "@remix-run/node"
+import { commitSession, getSession } from "~/api/cookie"
+
+
+import type { ActionFunction } from "@remix-run/node"
+
+export const action: ActionFunction = async ({ request }) => {
+  const form = await request.formData()
+  const accessToken = form.get('accessToken')
+  const session = await getSession()
+  session.set('accessToken', accessToken)
+  const cookie = await commitSession(session) as string
+
+  return redirect('/channels', {
+    headers: {
+      "Set-Cookie": cookie
+    }
+  })
+}
+
 export default function login() {
 
   const handleLogin = async (e: SyntheticEvent) => {
@@ -13,12 +33,14 @@ export default function login() {
 
     console.log({email, password})
 
-    const { data, error } = await supabase.auth.signIn({
+    const { error } = await supabase.auth.signIn({
+    // const { data, error } = await supabase.auth.signIn({
       email,
       password
     })
 
-    console.log({ data, error })
+    // console.log({ data, error })
+    console.log({ error })
   }
 
   return (

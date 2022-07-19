@@ -25,3 +25,6 @@ export {
   commitSession,
   destroySession
 }
+
+
+// cookie.serialize("value", { expires })

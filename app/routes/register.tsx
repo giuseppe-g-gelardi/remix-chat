@@ -5,7 +5,6 @@ import supabase from '../api/supabase'
 
 export default function login() {
 
-
   const handleRegister = async (e: SyntheticEvent) => {
     e.preventDefault()
 
@@ -15,19 +14,14 @@ export default function login() {
 
     console.log({email, password})
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
+    // const { data, error } = await supabase.auth.signUp({
       email,
       password
     })
-
-    console.log({ data, error })
+    console.log({ error })
+    // console.log({ data, error })
   }
-
-
-
-
-
-
 
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-gray-800 text-white">

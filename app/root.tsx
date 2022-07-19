@@ -42,24 +42,19 @@ export default function App() {
   const { env } = useLoaderData()
   const fetcher = useFetcher()
 
-  console.log(fetcher.state)
-
-
   useEffect(() => {
-
     supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN') {
-        // call /auth/login
+        console.log('signing in')
         fetcher.submit({
           accessToken: session?.access_token!
         }, {
           method: 'post',
-          action: '/auth/login'
+          action: '/login'
         })
       }
     })
-
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

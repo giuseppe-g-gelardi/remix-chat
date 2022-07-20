@@ -14,7 +14,7 @@ export const loader: LoaderFunction = async ({ params: { id }, request }) => {
 
   const { data: channel, error } = await supabase
     .from('channels')
-    .select('id, title, description, messages(id, content)')
+    .select('id, title, description, messages(id, content, profiles(*))')
     .match({ id })
     .single()
 

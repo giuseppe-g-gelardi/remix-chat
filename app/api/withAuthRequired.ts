@@ -10,11 +10,11 @@ export default async (context: any) => {
     supabase,
     user,
     accessToken,
-    redirect: null,
+    redirect: null as any
   };
 
   if (!user) {
-    result.redirect = redirect('/login');
+    result['redirect'] = redirect('/login');
     return result;
   }
 

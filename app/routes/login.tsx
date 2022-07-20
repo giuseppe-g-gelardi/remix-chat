@@ -33,14 +33,14 @@ export default function login() {
 
     console.log({email, password})
 
-    const { error } = await supabase.auth.signIn({
-    // const { data, error } = await supabase.auth.signIn({
+    // const { error } = await supabase.auth.signIn({
+    const { data, error } = await supabase.auth.signIn({
       email,
       password
     })
 
-    // console.log({ data, error })
-    console.log({ error })
+    console.log({ data, error })
+    // console.log({ error })
   }
 
   return (
